@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Agents Platform
 
-## Getting Started
+A modern, premium SaaS landing page for deploying autonomous AI agents. The platform positions AI not just as chatbots, but as a collaborative **AI Workforce** capable of executing complex workflows across engineering, marketing, HR, and operations.
 
-First, run the development server:
+## 🚀 Features
+
+- **Premium SaaS Design**: Inspired by top-tier products like Linear, Stripe, and Vercel. Features a sleek dark mode, refined typography, and subtle micro-animations.
+- **High-Performance Animations**: Centralized motion system utilizing Framer Motion with hardware-accelerated transitions.
+- **Mobile-First Responsive**: Flawless experience across desktop, tablet, and mobile devices.
+- **SEO Optimized**: Fully equipped with JSON-LD Structured Data, dynamic Open Graph images, proper metadata, canonical URLs, `sitemap.xml`, and `robots.txt`.
+- **Accessible**: Semantic HTML, screen-reader friendly (aria-labels), keyboard navigation skip links, and `prefers-reduced-motion` support.
+- **Component Architecture**: Modular, scalable UI built with shadcn/ui primitives.
+
+## 🛠️ Technology Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Components**: [shadcn/ui](https://ui.shadcn.com/)
+- **Animation**: [Framer Motion](https://www.framer.com/motion/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+
+## 📂 Project Structure
+
+```text
+├── app/                  # Next.js App Router (Layout, Page, SEO files)
+├── components/           # React Components
+│   ├── sections/         # Main landing page sections (Hero, Pricing, etc.)
+│   ├── shared/           # Reusable UI wrappers (Container, SectionHeader)
+│   └── ui/               # shadcn/ui base primitives
+├── lib/                  # Utilities (Motion tokens, cn helper)
+├── src/                  # Centralized data and types
+│   ├── data/             # Static content driving the UI (agents, pricing, etc.)
+│   └── types/            # TypeScript interfaces
+└── public/               # Static assets
+```
+
+## 💻 Getting Started
+
+1. **Install dependencies:**
+
+```bash
+npm install
+```
+
+2. **Run the development server:**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📝 Configuration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Animation Settings**: Adjust easing curves and durations centrally in `lib/motion.ts`.
+- **Content Updates**: All text, pricing, FAQs, and agent data can be managed without touching UI code via `src/data/`.
+- **SEO Data**: Site-wide JSON-LD schema is managed in `components/shared/StructuredData.tsx` and `app/layout.tsx`.
