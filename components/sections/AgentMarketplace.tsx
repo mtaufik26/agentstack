@@ -41,7 +41,7 @@ export function AgentMarketplace() {
                     data-[state=active]:shadow-md 
                     whitespace-nowrap
                     /* Mobile styles - Lebih besar dari sebelumnya */
-                    px-3 py-2 text-[11px]
+                    px-3 py-2 text-[10px]
                     /* Desktop styles */
                     sm:px-6 sm:py-2.5 sm:text-sm
                   `}
