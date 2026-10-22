@@ -192,3 +192,12 @@
 [data-motion-will-change] {
   will-change: transform, opacity;
 }
+
+/* ─── Rendering Performance & Compositing ───────────────────────────────────
+   content-visibility: auto skips layout and paint passes for offscreen sections,
+   dramatically improving scroll FPS and reducing GPU/CPU memory pressure.
+*/
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}

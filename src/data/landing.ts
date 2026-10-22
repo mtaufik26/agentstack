@@ -16,7 +16,7 @@ export const heroData: HeroData = {
   headline: "Hire an AI Workforce, Not Just a Chatbot",
   subheadline: "Scale your company as fast as software. Delegate complex workflows to specialized AI Agents that collaborate, execute, and deliver results 24/7.",
   primaryCta: "Start Free Trial",
-  secondaryCta: "Request Demo"
+  secondaryCta: "Explore Platform"
 };
 
 export const socialProofLogos = [
@@ -45,14 +45,18 @@ export const howItWorksSteps: Step[] = [
 ];
 
 export const integrations: Integration[] = [
-  { id: "github", name: "GitHub", icon: "Github", category: "development" },
-  { id: "slack", name: "Slack", icon: "Slack", category: "communication" },
-  { id: "jira", name: "Jira", icon: "Trello", category: "development" },
-  { id: "notion", name: "Notion", icon: "FileText", category: "productivity" },
-  { id: "salesforce", name: "Salesforce", icon: "Cloud", category: "crm" },
-  { id: "linear", name: "Linear", icon: "Activity", category: "development" },
-  { id: "figma", name: "Figma", icon: "Figma", category: "design" },
-  { id: "zoom", name: "Zoom", icon: "Video", category: "communication" },
+  { id: "github", name: "GitHub", icon: "Github", category: "Version Control" },
+  { id: "slack", name: "Slack", icon: "Slack", category: "Team Chat" },
+  { id: "jira", name: "Jira", icon: "Jira", category: "Issue Tracking" },
+  { id: "linear", name: "Linear", icon: "Linear", category: "Project Tracking" },
+  { id: "notion", name: "Notion", icon: "Notion", category: "Documentation" },
+  { id: "figma", name: "Figma", icon: "Figma", category: "Design Systems" },
+  { id: "docker", name: "Docker", icon: "Boxes", category: "Containerization" },
+  { id: "aws", name: "AWS Cloud", icon: "Cloud", category: "Infrastructure" },
+  { id: "sentry", name: "Sentry", icon: "ShieldAlert", category: "Telemetry" },
+  { id: "stripe", name: "Stripe", icon: "CreditCard", category: "Payments & Invoicing" },
+  { id: "salesforce", name: "Salesforce", icon: "Database", category: "Enterprise CRM" },
+  { id: "zoom", name: "Zoom", icon: "Video", category: "Virtual Meetings" },
 ];
 
 export const integrationsData = {

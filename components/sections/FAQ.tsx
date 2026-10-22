@@ -16,9 +16,10 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = React.useState<number | null>(null);
 
   return (
-    <SectionWrapper id="faq" className="bg-background py-24 md:py-32">
+    <SectionWrapper id="faq" className="bg-background border-t border-border/40 py-24 md:py-32">
       <Container className="max-w-3xl mx-auto">
         <SectionHeader 
+          badge="Knowledge Base"
           title="Frequently Asked Questions" 
           subtitle="Everything you need to know about deploying your AI workforce."
           alignment="center"
@@ -26,7 +27,7 @@ export function FAQ() {
         />
         
         <motion.div
-          className="flex flex-col border-t border-white/10"
+          className="flex flex-col border-t border-border/40"
           initial="hidden"
           whileInView="visible"
           viewport={viewport}
@@ -36,10 +37,13 @@ export function FAQ() {
             const isOpen = openIndex === index;
             
             return (
-              <motion.div key={index} variants={fadeUpVariant} className="border-b border-white/10">
+              <motion.div key={index} variants={fadeUpVariant} className="border-b border-border/40">
                 <button
+                  id={`faq-trigger-${index}`}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${index}`}
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full py-6 flex items-center justify-between text-left focus:outline-none group"
+                  className="w-full py-6 flex items-center justify-between text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-lg group"
                 >
                   <span className={cn(
                     "text-lg font-medium transition-colors duration-300",
@@ -49,7 +53,7 @@ export function FAQ() {
                   </span>
                   <div className={cn(
                     "w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-300 ml-4 shrink-0",
-                    isOpen ? "border-foreground bg-foreground text-background" : "border-white/10 text-white/50 group-hover:border-white/30"
+                    isOpen ? "border-foreground bg-foreground text-background" : "border-border/60 text-muted-foreground group-hover:border-border"
                   )}>
                     <Icon name="Plus" className={cn("w-3 h-3 transition-transform duration-300", isOpen ? "rotate-45" : "rotate-0")} />
                   </div>
@@ -58,6 +62,9 @@ export function FAQ() {
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
+                      id={`faq-answer-${index}`}
+                      role="region"
+                      aria-labelledby={`faq-trigger-${index}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}

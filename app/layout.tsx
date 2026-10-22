@@ -162,6 +162,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geist.variable} ${heading.variable} ${mono.variable} dark scroll-smooth`}
+      data-scroll-behavior="smooth"
     >
       <body>
         {/* JSON-LD Structured Data */}

@@ -15,20 +15,40 @@ export function Navbar() {
 
   React.useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-      const sections = navbarData.links.map(l => l.href.substring(1));
-      let current = "";
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element && window.scrollY >= (element.offsetTop - 200)) {
-          current = section;
-        }
-      }
-      setActiveSection(current);
+      const isScrolled = window.scrollY > 20;
+      setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    const sectionIds = navbarData.links.map((l) => l.href.substring(1));
+    const sectionElements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    let observer: IntersectionObserver | null = null;
+    if (typeof window !== "undefined" && "IntersectionObserver" in window && sectionElements.length > 0) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries.filter((e) => e.isIntersecting);
+          if (visible.length > 0) {
+            visible.sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top));
+            setActiveSection(visible[0].target.id);
+          }
+        },
+        {
+          rootMargin: "-20% 0px -50% 0px",
+          threshold: [0, 0.2],
+        }
+      );
+      sectionElements.forEach((el) => observer!.observe(el));
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (observer) observer.disconnect();
+    };
   }, []);
 
   // Lock body scroll when mobile menu is open
@@ -41,15 +61,8 @@ export function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith("#")) {
-      e.preventDefault();
-      setMobileOpen(false);
-      setTimeout(() => {
-        const element = document.getElementById(href.substring(1));
-        if (element) element.scrollIntoView({ behavior: "smooth" });
-      }, 300);
-    }
+  const closeMobileMenu = () => {
+    setMobileOpen(false);
   };
 
   return (
@@ -59,7 +72,7 @@ export function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
-          "fixed top-0 inset-x-0 z-50 w-full transition-all duration-300",
+          "fixed top-0 inset-x-0 z-50 w-full transition-all duration-300 transform-gpu",
           scrolled
             ? "border-b border-border/50 bg-background/80 backdrop-blur-xl shadow-sm"
             : "border-transparent bg-transparent"
@@ -82,16 +95,15 @@ export function Navbar() {
                 <a
                   key={link.label}
                   href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
                   className={cn(
                     "px-4 py-2 text-sm font-medium transition-colors relative rounded-full",
-                    isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                    isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                   )}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="navbar-indicator"
-                      className="absolute inset-0 bg-white/10 border border-white/10 rounded-full -z-10"
+                      className="absolute inset-0 bg-secondary/80 border border-border/60 rounded-full -z-10"
                       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
@@ -115,7 +127,7 @@ export function Navbar() {
 
           {/* Mobile Hamburger */}
           <button
-            className="md:hidden relative z-10 flex items-center justify-center w-10 h-10 rounded-full text-foreground hover:bg-white/10 transition-colors"
+            className="md:hidden relative z-10 flex items-center justify-center w-10 h-10 rounded-full text-foreground hover:bg-secondary/60 transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -155,9 +167,9 @@ export function Navbar() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.07, duration: 0.3 }}
-                      onClick={(e) => handleNavClick(e, link.href)}
+                      onClick={closeMobileMenu}
                       className={cn(
-                        "flex items-center justify-between py-4 text-2xl font-medium border-b border-white/5 transition-colors",
+                        "flex items-center justify-between py-4 text-2xl font-medium border-b border-border/40 transition-colors",
                         isActive ? "text-foreground" : "text-muted-foreground"
                       )}
                     >
@@ -178,15 +190,15 @@ export function Navbar() {
               >
                 <Link
                   href="/login"
-                  onClick={() => setMobileOpen(false)}
-                  className="text-center py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors border border-white/10 rounded-full"
+                  onClick={closeMobileMenu}
+                  className="text-center py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors border border-border/60 bg-secondary/30 hover:bg-secondary/60 rounded-full"
                 >
                   {navbarData.loginText}
                 </Link>
                 <Button
                   onClick={() => {
                     setMobileOpen(false);
-                    setTimeout(() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }), 300);
+                    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="w-full h-12 text-base rounded-full bg-foreground text-background active:scale-95 transition-all font-semibold">
                   {navbarData.ctaText}

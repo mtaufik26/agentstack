@@ -12,6 +12,7 @@ export interface Agent {
   description: string;
   capabilities: string[];
   icon: string; // Lucide icon name
+  taskSimulation?: string[];
 }
 
 export interface Feature {
@@ -75,8 +76,8 @@ export interface Step {
 export interface Integration {
   id: string;
   name: string;
-  icon: string; // Lucide icon name
-  category?: 'communication' | 'development' | 'design' | 'crm' | 'productivity' | 'analytics';
+  icon: string; // Lucide icon name or brand SVG
+  category?: string;
 }
 
 export interface UseCase {

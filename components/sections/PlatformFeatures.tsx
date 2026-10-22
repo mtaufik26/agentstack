@@ -12,9 +12,10 @@ import { staggerContainer, fadeUpScaleVariant, viewport } from "@/lib/motion";
 
 export function PlatformFeatures() {
   return (
-    <SectionWrapper id="features" className="bg-background border-t border-white/5">
+    <SectionWrapper id="features" className="bg-background border-t border-border/40">
       <Container>
         <SectionHeader 
+          badge="Enterprise Architecture"
           title="Enterprise-Grade Architecture" 
           subtitle="Built from the ground up for scale, security, and seamless collaboration across millions of tasks."
           className="mb-12 md:mb-24"
@@ -36,15 +37,15 @@ export function PlatformFeatures() {
                 key={feature.id} 
                 variants={fadeUpScaleVariant}
                 className={cn(
-                  "group flex flex-col p-6 md:p-10 rounded-2xl border border-white/10 bg-white/[0.01] hover:bg-white/[0.03] transition-colors duration-500 relative overflow-hidden",
+                  "group flex flex-col p-6 md:p-10 rounded-2xl border border-border/50 bg-card/50 hover:bg-card/80 hover:border-border transition-all duration-300 relative overflow-hidden",
                   isLarge ? "md:col-span-2" : "col-span-1"
                 )}
               >
-                {/* Subtle Radial Glow on Hover via CSS */}
-                <div className="absolute -inset-px rounded-2xl border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                {/* Subtle Radial Glow on Hover */}
+                <div className="absolute -inset-px rounded-2xl border border-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                 
-                <div className="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center mb-8 border border-white/10 group-hover:bg-foreground group-hover:border-foreground transition-all duration-300">
-                  <Icon name={feature.icon} className="w-7 h-7 text-foreground group-hover:text-background transition-colors" />
+                <div className="w-14 h-14 rounded-xl bg-secondary/60 flex items-center justify-center mb-8 border border-border/50 group-hover:bg-primary group-hover:border-primary transition-all duration-300">
+                  <Icon name={feature.icon} className="w-7 h-7 text-foreground group-hover:text-primary-foreground transition-colors" />
                 </div>
                 
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-medium tracking-tight mb-3 text-foreground">{feature.title}</h3>
@@ -52,10 +53,10 @@ export function PlatformFeatures() {
                   {feature.description}
                 </p>
                 
-                <ul className="space-y-4 mt-auto border-t border-white/5 pt-8">
+                <ul className="space-y-4 mt-auto border-t border-border/30 pt-8">
                   {feature.benefits.map((benefit, idx) => (
                     <li key={idx} className="flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-foreground/50"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary/70"></div>
                       <span className="text-sm font-medium text-muted-foreground">{benefit}</span>
                     </li>
                   ))}

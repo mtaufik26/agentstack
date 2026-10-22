@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 
 export function Footer() {
   return (
-    <footer className="bg-background pt-16 md:pt-24 pb-8 overflow-hidden relative border-t border-white/5">
+    <footer className="bg-background pt-16 md:pt-24 pb-8 overflow-hidden relative border-t border-border/40">
       <Container className="relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 lg:gap-12 mb-16 md:mb-24">
           {/* Brand Column */}
@@ -47,7 +47,7 @@ export function Footer() {
                         }}
                       >
                         <span>{link.label}</span>
-                        <span className="absolute -bottom-1 left-0 w-0 h-px bg-white/30 transition-all duration-300 group-hover:w-full"></span>
+                        <span className="absolute -bottom-1 left-0 w-0 h-px bg-foreground/30 transition-all duration-300 group-hover:w-full"></span>
                       </Link>
                     </li>
                   );
@@ -58,11 +58,11 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+        <div className="pt-8 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
           <p className="text-sm text-muted-foreground" suppressHydrationWarning>
             © {new Date().getFullYear()} {navbarData.logo}. All rights reserved.
           </p>
-          <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+          <div className="flex items-center gap-3 bg-secondary/50 px-4 py-2 rounded-full border border-border/60">
             <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">All Systems Operational</span>
           </div>

@@ -10,10 +10,10 @@ import { scaleUpVariant, viewport } from "@/lib/motion";
 
 export function FinalCTA() {
   return (
-    <SectionWrapper id="cta" className="relative py-20 md:py-32 overflow-hidden border-t border-white/5">
+    <SectionWrapper id="cta" className="relative py-20 md:py-32 overflow-hidden border-t border-border/40">
       {/* Dynamic Background */}
       <div className="absolute inset-0 bg-background z-0"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[400px] bg-white/[0.02] rounded-[100%] blur-[80px] z-0 pointer-events-none"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[400px] bg-secondary/20 rounded-[100%] blur-[80px] z-0 pointer-events-none transform-gpu"></div>
       
       <Container className="relative z-10">
         <motion.div 
@@ -23,7 +23,7 @@ export function FinalCTA() {
           variants={scaleUpVariant}
           className="flex flex-col items-center text-center max-w-4xl mx-auto"
         >
-          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium mb-8">
+          <div className="inline-flex items-center rounded-full border border-border/60 bg-secondary/50 px-4 py-1.5 text-sm font-medium mb-8">
             <span className="flex h-2 w-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
             System Ready for Deployment
           </div>
@@ -40,14 +40,14 @@ export function FinalCTA() {
             <Button 
               size="lg" 
               onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
-              className="w-full sm:w-auto h-14 px-10 text-base font-semibold bg-foreground text-background hover:bg-white/90 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.15)] transition-all hover:scale-[1.02] active:scale-[0.98]">
+              className="w-full sm:w-auto h-14 px-10 text-base font-semibold bg-foreground text-background hover:bg-foreground/90 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.15)] transition-all hover:scale-[1.02] active:scale-[0.98]">
               {finalCtaData.primaryCta}
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
-              onClick={() => window.open('mailto:sales@ai-agents.com')}
-              className="w-full sm:w-auto h-14 px-10 text-base font-semibold rounded-full border-white/20 bg-black/50 backdrop-blur-md hover:bg-white/10 transition-all hover:scale-[1.02] active:scale-[0.98]">
+              onClick={() => { window.location.href = 'mailto:sales@ai-agents.com?subject=Enterprise%20Sales%20Inquiry'; }}
+              className="w-full sm:w-auto h-14 px-10 text-base font-semibold rounded-full border-border/60 bg-secondary/40 backdrop-blur-md hover:bg-secondary/80 text-foreground transition-all hover:scale-[1.02] active:scale-[0.98]">
               {finalCtaData.secondaryCta}
             </Button>
           </div>

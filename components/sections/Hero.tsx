@@ -29,32 +29,67 @@ const terminalSteps = [
 
 export function Hero() {
   const [activeStepIndex, setActiveStepIndex] = React.useState(0);
+  const timeoutsRef = React.useRef<NodeJS.Timeout[]>([]);
+  const loopTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const runSequenceRef = React.useRef<(startIndex?: number) => void>(() => {});
+
+  const clearAllTimeouts = React.useCallback(() => {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+    if (loopTimeoutRef.current) {
+      clearTimeout(loopTimeoutRef.current);
+      loopTimeoutRef.current = null;
+    }
+  }, []);
+
+  const runSequence = React.useCallback((startIndex = 0) => {
+    clearAllTimeouts();
+    const remainingSteps = terminalSteps.slice(startIndex);
+    const baseDelay = startIndex === 0 ? 0 : terminalSteps[startIndex].delay;
+
+    timeoutsRef.current = remainingSteps.map((step, idx) => {
+      const actualIndex = startIndex + idx;
+      const delay = Math.max(0, step.delay - baseDelay);
+      return setTimeout(() => {
+        setActiveStepIndex(actualIndex);
+      }, delay);
+    });
+
+    const totalDuration = Math.max(0, 13000 - baseDelay);
+    loopTimeoutRef.current = setTimeout(() => {
+      runSequenceRef.current(0);
+    }, totalDuration);
+  }, [clearAllTimeouts]);
 
   React.useEffect(() => {
-    let timeouts: NodeJS.Timeout[] = [];
-    
-    // Start the sequence
-    const runSequence = () => {
-      timeouts = terminalSteps.map((step, index) => {
-        return setTimeout(() => {
-          setActiveStepIndex(index);
-        }, step.delay);
-      });
-    };
+    runSequenceRef.current = runSequence;
+  }, [runSequence]);
 
-    runSequence();
+  React.useEffect(() => {
+    runSequence(0);
+    return () => clearAllTimeouts();
+  }, [runSequence, clearAllTimeouts]);
 
-    return () => timeouts.forEach(clearTimeout);
-  }, []);
+  const handleSelectAgent = (agentId: string) => {
+    const idx = terminalSteps.findIndex((s) => s.agentId === agentId);
+    if (idx !== -1) {
+      setActiveStepIndex(idx);
+      clearAllTimeouts();
+      loopTimeoutRef.current = setTimeout(() => {
+        runSequenceRef.current((idx + 1) % terminalSteps.length);
+      }, 4000);
+    }
+  };
 
   const currentStep = terminalSteps[activeStepIndex];
   const activeAgentId = currentStep?.agentId;
+  const isProductionReady = activeStepIndex === terminalSteps.length - 1;
 
   return (
-    <SectionWrapper id="hero" className="pt-24 md:pt-40 pb-16 lg:pt-32 lg:pb-32 bg-background relative overflow-hidden px-4 md:px-0">
+    <SectionWrapper id="hero" contentAuto={false} className="pt-24 md:pt-40 pb-16 lg:pt-32 lg:pb-32 bg-background relative overflow-hidden px-4 md:px-0">
       {/* Massive subtle background glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] opacity-20 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.4),transparent_70%)] blur-[100px]"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] opacity-20 pointer-events-none transform-gpu">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.4),transparent_70%)] blur-[80px]"></div>
       </div>
       
       <Container className="relative z-10 flex flex-col items-center text-center">
@@ -105,7 +140,7 @@ export function Hero() {
           <Button 
             size="lg" 
             variant="outline" 
-            onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
             className="w-full sm:w-auto h-12 px-8 text-sm font-semibold rounded-full border-border/50 hover:bg-muted/30 transition-all hover:scale-[1.02] active:scale-[0.98]">
             {heroData.secondaryCta}
           </Button>
@@ -116,35 +151,35 @@ export function Hero() {
           initial={{ opacity: 0, y: 40, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.5, ease: EASE_OUT_EXPO }}
-          className="mt-20 md:mt-24 w-full max-w-5xl rounded-2xl border border-white/10 bg-black/40 backdrop-blur-2xl shadow-2xl overflow-hidden flex flex-col relative ring-1 ring-white/5"
+          className="mt-20 md:mt-24 w-full max-w-5xl rounded-2xl border border-border/60 bg-card/60 backdrop-blur-md shadow-2xl overflow-hidden flex flex-col relative ring-1 ring-border/40 transform-gpu"
         >
            {/* macOS style top bar */}
-           <div className="h-12 w-full border-b border-white/5 flex items-center px-4 bg-white/[0.02]">
+           <div className="h-12 w-full border-b border-border/40 flex items-center px-4 bg-secondary/40">
              <div className="flex gap-2">
-               <div className="w-3 h-3 rounded-full bg-white/20"></div>
-               <div className="w-3 h-3 rounded-full bg-white/20"></div>
-               <div className="w-3 h-3 rounded-full bg-white/20"></div>
+               <div className="w-3 h-3 rounded-full bg-border/80"></div>
+               <div className="w-3 h-3 rounded-full bg-border/80"></div>
+               <div className="w-3 h-3 rounded-full bg-border/80"></div>
              </div>
-             <div className="mx-auto flex items-center gap-2 text-xs font-mono text-white/40">
-               <Terminal className="w-3 h-3" />
-               workspace/ai-collaboration
+             <div className="mx-auto flex items-center gap-2 text-xs font-mono text-muted-foreground">
+               <Terminal className="w-3.5 h-3.5" />
+               workspace/ai-workforce-orchestration
              </div>
            </div>
            
            <div className="flex flex-col md:flex-row min-h-[350px]">
              {/* Left Panel: Live Terminal */}
-             <div className="w-full md:w-3/5 p-6 md:p-8 text-left font-mono text-sm relative border-b md:border-b-0 md:border-r border-white/5">
+             <div className="w-full md:w-3/5 p-6 md:p-8 text-left font-mono text-sm relative border-b md:border-b-0 md:border-r border-border/40">
                <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:20px_20px]"></div>
                <div className="relative z-10 space-y-4">
-                 <div className="text-white/40 mb-6 text-xs uppercase tracking-widest flex items-center gap-2">
-                   <Activity className="w-3 h-3" /> Execution Log
+                 <div className="text-muted-foreground mb-6 text-xs uppercase tracking-widest flex items-center gap-2">
+                   <Activity className="w-3.5 h-3.5 text-emerald-400" /> Execution Stream
                  </div>
                  
                  <AnimatePresence mode="popLayout">
                    {terminalSteps.slice(0, activeStepIndex + 1).map((step, index) => {
                      const isSystem = step.agentId === 'system';
                      const agentInfo = agents.find(a => a.id === step.agentId);
-                     const textColor = isSystem ? 'text-white/80' : agentInfo?.color;
+                     const textColor = isSystem ? 'text-foreground/80' : agentInfo?.color;
                      
                      return (
                        <motion.div
@@ -155,11 +190,11 @@ export function Hero() {
                          className="flex items-start gap-3"
                        >
                          {isSystem ? (
-                           <CheckCircle2 className="w-4 h-4 mt-0.5 text-white/40" />
+                           <CheckCircle2 className="w-4 h-4 mt-0.5 text-emerald-400/80" />
                          ) : (
                            <span className={cn("mt-0.5 text-xs font-black", textColor)}>❯</span>
                          )}
-                         <span className={textColor}>{step.text}</span>
+                         <span className={cn(textColor, "text-xs sm:text-sm")}>{step.text}</span>
                        </motion.div>
                      );
                    })}
@@ -170,52 +205,67 @@ export function Hero() {
                    <motion.div 
                      animate={{ opacity: [1, 0] }}
                      transition={{ repeat: Infinity, duration: 0.8 }}
-                     className="w-2 h-4 bg-white/60 ml-7 mt-2"
+                     className="w-2 h-4 bg-foreground/60 ml-7 mt-2"
                    />
                  )}
                </div>
                
                {/* Fade out bottom gradient */}
-               <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+               <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background/80 to-transparent pointer-events-none"></div>
              </div>
              
              {/* Right Panel: Active Agent Roster */}
-             <div className="w-full md:w-2/5 p-6 md:p-8 bg-white/[0.01]">
-                <div className="text-white/40 mb-6 text-xs uppercase tracking-widest text-left font-mono flex items-center gap-2">
-                  Network Roster
+             <div className="w-full md:w-2/5 p-6 md:p-8 bg-secondary/20">
+                <div className="text-muted-foreground mb-6 text-xs uppercase tracking-widest text-left font-mono flex items-center justify-between">
+                  <span>Active Roster</span>
+                  <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    {isProductionReady ? "Completed" : "Live"}
+                  </span>
                 </div>
                 <div className="flex flex-col gap-4">
                   {agents.map((agent) => {
-                    const isActive = activeAgentId === agent.id;
+                    const isWorking = activeAgentId === agent.id;
+                    const isActive = isWorking || isProductionReady;
                     const IconComponent = agent.icon;
                     
                     return (
                       <div 
                         key={agent.id}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleSelectAgent(agent.id);
+                          }
+                        }}
+                        onClick={() => handleSelectAgent(agent.id)}
                         className={cn(
-                          "flex items-center p-4 rounded-xl border transition-all duration-500",
+                          "flex items-center p-4 rounded-xl border transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                           isActive 
-                            ? cn("bg-white/5 border-white/20 scale-[1.02]", agent.glow) 
-                            : "bg-white/[0.02] border-white/5 opacity-50"
+                            ? cn("bg-card border-border shadow-md scale-[1.02]", agent.glow) 
+                            : "bg-secondary/40 border-border/40 opacity-60 hover:opacity-100 hover:border-border/80"
                         )}
+                        title={`Click to inspect ${agent.name} activity`}
                       >
                         <div className={cn(
-                          "w-10 h-10 rounded-lg flex items-center justify-center border transition-colors duration-500",
-                          isActive ? cn(agent.bg, agent.border) : "bg-white/5 border-white/10"
+                          "w-10 h-10 rounded-lg flex items-center justify-center border transition-colors duration-300",
+                          isActive ? cn(agent.bg, agent.border) : "bg-secondary/60 border-border/50"
                         )}>
                           <IconComponent className={cn(
-                            "w-5 h-5 transition-colors duration-500",
-                            isActive ? agent.color : "text-white/40"
+                            "w-5 h-5 transition-colors duration-300",
+                            isActive ? agent.color : "text-muted-foreground"
                           )} />
                         </div>
                         <div className="ml-4 text-left">
                           <h4 className={cn(
-                            "text-sm font-semibold transition-colors duration-500",
-                            isActive ? "text-white" : "text-white/60"
+                            "text-sm font-semibold transition-colors duration-300",
+                            isActive ? "text-foreground" : "text-muted-foreground"
                           )}>
                             {agent.name}
                           </h4>
-                          <p className="text-xs text-white/40 font-mono mt-1">{agent.role}</p>
+                          <p className="text-xs text-muted-foreground font-mono mt-0.5">{agent.role}</p>
                         </div>
                         
                         {/* Active Indicator Pulse */}
